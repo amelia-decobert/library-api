@@ -30,6 +30,12 @@ public class BookService {
         return findBookOrThrow(id);
     }
 
+    public List<Book> searchByTitle(String title) {
+        return books.stream()
+                .filter(book -> book.title().toLowerCase().contains(title.toLowerCase()))
+                .toList();
+    }
+
     public Book createBook(Book book) {
         // id generated only by server
         Long newId = idGenerator.incrementAndGet();

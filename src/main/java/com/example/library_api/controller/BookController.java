@@ -1,5 +1,8 @@
 package com.example.library_api.controller;
 
+import com.example.library_api.dto.BookRequest;
+import com.example.library_api.dto.BookResponse;
+import com.example.library_api.mapper.BookMapper;
 import com.example.library_api.model.Book;
 import com.example.library_api.service.BookService;
 import jakarta.validation.Valid;
@@ -20,27 +23,35 @@ import java.util.List;
 //}
 public class BookController {
     private final BookService bookService;
+    private final BookMapper bookMapper;
 
     @GetMapping("/books")
-    public List<Book> getAllBooks() {
-        return bookService.getAllBooks();
+    public List<BookResponse> getAllBooks() {
+        return bookMapper.toResponseList(bookService.getAllBooks());
     }
 
     @GetMapping("/books/{id}")
-    public Book getBookById(@PathVariable Long id) { // Get the id in the URL and convert into Long
-        return bookService.getBookById(id);
+    public BookResponse getBookById(@PathVariable Long id) { // Get the id in the URL and convert into Long
+        return bookMapper.toResponse(bookService.getBookById(id));
+    }
+
+    @GetMapping("/books/search")
+    public List<BookResponse> searchBooks(@RequestParam String title) {
+        return bookMapper.toResponseList(bookService.searchByTitle(title));
     }
 
     @PostMapping("/books")
-    public ResponseEntity<Book> createBook(@Valid @RequestBody Book book) {
+    public ResponseEntity<BookResponse> createBook(@Valid @RequestBody BookRequest request) {
+        Book book = bookMapper.toEntity(request);
         Book created = bookService.createBook(book);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookMapper.toResponse(created));
     }
 
     @PutMapping("/books/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @Valid @RequestBody Book book) {
+    public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @Valid @RequestBody BookRequest request) {
+        Book book = bookMapper.toEntity(request);
         Book updated = bookService.updateBook(id, book);
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok(bookMapper.toResponse(updated));
     }
 
     @DeleteMapping("/books/{id}")
