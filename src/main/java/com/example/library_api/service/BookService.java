@@ -1,5 +1,6 @@
 package com.example.library_api.service;
 
+import com.example.library_api.exception.BookNotFoundException;
 import com.example.library_api.model.Book;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,13 @@ public class BookService {
     // Generate unique auto incremented id from the last id
     private final AtomicLong idGenerator = new AtomicLong(3L);
 
-    public List<Book> getAllBooks() {
-        return books;
+    public List<Book> getAllBooks(int page, int size) {
+        int fromIndex = page * size;
+        if (fromIndex >= books.size()) {
+            return List.of();
+        }
+        int toIndex = Math.min(fromIndex + size, books.size());
+        return books.subList(fromIndex, toIndex);
     }
 
     public Book getBookById(Long id) {
@@ -64,6 +70,6 @@ public class BookService {
         return books.stream()
                 .filter(book -> book.id().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book with id " + id + " not found"));
+                .orElseThrow(() -> new BookNotFoundException(id));
     }
 }

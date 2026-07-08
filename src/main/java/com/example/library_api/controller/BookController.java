@@ -26,8 +26,11 @@ public class BookController {
     private final BookMapper bookMapper;
 
     @GetMapping("/books")
-    public List<BookResponse> getAllBooks() {
-        return bookMapper.toResponseList(bookService.getAllBooks());
+    public List<BookResponse> getAllBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return bookMapper.toResponseList(bookService.getAllBooks(page, size));
     }
 
     @GetMapping("/books/{id}")
