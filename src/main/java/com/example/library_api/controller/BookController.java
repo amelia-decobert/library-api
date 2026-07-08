@@ -1,11 +1,15 @@
 package com.example.library_api.controller;
 
+import com.example.library_api.dto.BookRequest;
+import com.example.library_api.dto.BookResponse;
+import com.example.library_api.mapper.BookMapper;
 import com.example.library_api.model.Book;
 import com.example.library_api.service.BookService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,14 +23,43 @@ import java.util.List;
 //}
 public class BookController {
     private final BookService bookService;
+    private final BookMapper bookMapper;
 
     @GetMapping("/books")
-    public List<Book> getAllBooks() {
-        return bookService.getAllBooks();
+    public List<BookResponse> getAllBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return bookMapper.toResponseList(bookService.getAllBooks(page, size));
     }
 
     @GetMapping("/books/{id}")
-    public Book getBookById(@PathVariable Long id) { // Get the id in the URL and convert into Long
-        return bookService.getBookById(id);
+    public BookResponse getBookById(@PathVariable Long id) { // Get the id in the URL and convert into Long
+        return bookMapper.toResponse(bookService.getBookById(id));
+    }
+
+    @GetMapping("/books/search")
+    public List<BookResponse> searchBooks(@RequestParam String title) {
+        return bookMapper.toResponseList(bookService.searchByTitle(title));
+    }
+
+    @PostMapping("/books")
+    public ResponseEntity<BookResponse> createBook(@Valid @RequestBody BookRequest request) {
+        Book book = bookMapper.toEntity(request);
+        Book created = bookService.createBook(book);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookMapper.toResponse(created));
+    }
+
+    @PutMapping("/books/{id}")
+    public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @Valid @RequestBody BookRequest request) {
+        Book book = bookMapper.toEntity(request);
+        Book updated = bookService.updateBook(id, book);
+        return ResponseEntity.ok(bookMapper.toResponse(updated));
+    }
+
+    @DeleteMapping("/books/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        bookService.deleteBook(id);
+        return ResponseEntity.noContent().build();
     }
 }
