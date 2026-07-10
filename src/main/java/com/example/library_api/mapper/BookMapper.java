@@ -11,11 +11,22 @@ import java.util.List;
 @Component
 public class BookMapper {
     public Book toEntity(BookRequest request) {
-        return new Book(null, request.title());
+        Book book = new Book();
+        book.setTitle(request.title());
+        book.setAuthor(request.author());
+        book.setIsbn(request.isbn());
+        book.setPublicationYear(request.publicationYear());
+        return book;
     }
 
     public BookResponse toResponse(Book book) {
-        return new BookResponse(book.id(), book.title());
+        return new BookResponse(
+                book.getId(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getIsbn(),
+                book.getPublicationYear()
+        );
     }
 
     public List<BookResponse> toResponseList(List<Book> books) {
