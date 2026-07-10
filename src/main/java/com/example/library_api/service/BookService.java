@@ -20,7 +20,7 @@ public class BookService {
     private final BookRepository bookRepository;
 
     public List<Book> getAllBooks(int page, int size) {
-        return bookRepository.findAll(PageRequest.of(page, size)).getContent();
+        return bookRepository.findAll(PageRequest.of(page, size)).getContent(); // PostgreSQL returns only necessary via LIMIT/OFFSET (sql)
     }
 
     public Book getBookById(Long id) {
@@ -32,11 +32,11 @@ public class BookService {
     }
 
     public List<Book> getRecentBooks(Integer year) {
-        return bookRepository.findByPublicationYear(year);
+        return bookRepository.findByPublicationYearGreaterThan(year);
     }
 
-    public List<Book> searchByTitle(String title) {
-        return bookRepository.findByTitleContainingIgnoreCase(title);
+    public List<Book> searchBooks(String title, String author, Integer year) {
+        return bookRepository.search(title, author, year);
     }
 
     public Book createBook(Book book) {
@@ -48,7 +48,7 @@ public class BookService {
         existing.setTitle(updatedBook.getTitle());
         existing.setAuthor(updatedBook.getAuthor());
         existing.setPublicationYear(updatedBook.getPublicationYear());
-        return bookRepository.save(existing);
+        return bookRepository.save(existing); // Launch an UPDATE sql rather than an INSERT
     }
 
     public void deleteBook(Long id) {

@@ -28,8 +28,7 @@ public class BookController {
     @GetMapping("/books")
     public List<BookResponse> getAllBooks(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         return bookMapper.toResponseList(bookService.getAllBooks(page, size));
     }
 
@@ -42,13 +41,22 @@ public class BookController {
     public List<BookResponse> getBooksByAuthor(@PathVariable String author) {
         return bookMapper.toResponseList(bookService.getBooksByAuthor(author));
     }
+
+    @GetMapping("/books/recent")
+    public List<BookResponse> getRecentBooks(@RequestParam Integer year) {
+        return bookMapper.toResponseList(bookService.getRecentBooks(year));
+    }
+
     @GetMapping("/books/search")
-    public List<BookResponse> searchBooks(@RequestParam String title) {
-        return bookMapper.toResponseList(bookService.searchByTitle(title));
+    public List<BookResponse> searchBooks(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) Integer year) {
+        return bookMapper.toResponseList(bookService.searchBooks(title, author, year));
     }
 
     @PostMapping("/books")
-    public ResponseEntity<BookResponse> createBook(@Valid @RequestBody BookRequest request) {
+    public ResponseEntity<BookResponse> createBook(@RequestBody BookRequest request) {
         Book book = bookMapper.toEntity(request);
         Book created = bookService.createBook(book);
         return ResponseEntity.status(HttpStatus.CREATED).body(bookMapper.toResponse(created));
