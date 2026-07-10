@@ -2,6 +2,9 @@ package com.example.library_api.service;
 
 import com.example.library_api.exception.BookNotFoundException;
 import com.example.library_api.model.Book;
+import com.example.library_api.repository.BookRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,64 +15,44 @@ import java.util.concurrent.atomic.AtomicLong;
 
 // Define the class as a Bean
 @Service
+@RequiredArgsConstructor
 public class BookService {
-    // Initialise a list in memory
-    private final List<Book> books = new ArrayList<>(List.of(
-            new Book(1L, "Clean Code"),
-            new Book(2L, "The Rules Of Work"),
-            new Book(3L, "Le Parfum")
-    ));
-
-    // Generate unique auto incremented id from the last id
-    private final AtomicLong idGenerator = new AtomicLong(3L);
+    private final BookRepository bookRepository;
 
     public List<Book> getAllBooks(int page, int size) {
-        int fromIndex = page * size;
-        if (fromIndex >= books.size()) {
-            return List.of();
-        }
-        int toIndex = Math.min(fromIndex + size, books.size());
-        return books.subList(fromIndex, toIndex);
+        return bookRepository.findAll(PageRequest.of(page, size)).getContent();
     }
 
     public Book getBookById(Long id) {
-        return findBookOrThrow(id);
+        return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+    }
+
+    public List<Book> getBooksByAuthor(String author) {
+        return bookRepository.findByAuthor(author);
+    }
+
+    public List<Book> getRecentBooks(Integer year) {
+        return bookRepository.findByPublicationYear(year);
     }
 
     public List<Book> searchByTitle(String title) {
-        return books.stream()
-                .filter(book -> book.title().toLowerCase().contains(title.toLowerCase()))
-                .toList();
+        return bookRepository.findByTitleContainingIgnoreCase(title);
     }
 
     public Book createBook(Book book) {
-        // id generated only by server
-        Long newId = idGenerator.incrementAndGet();
-        Book created = new Book(newId, book.title());
-        books.add(created);
-        return created;
+        return bookRepository.save(book);
     }
 
-    // Book is a record so is impossible to update,
-    // Create a new object Book with same id but different title,
-    // Then replace previous one int the list
     public Book updateBook(Long id, Book updatedBook) {
-        Book existing = findBookOrThrow(id);
-        Book updated = new Book(existing.id(), updatedBook.title());
-        books.remove(existing);
-        books.add(updated);
-        return updated;
+        Book existing = getBookById(id);
+        existing.setTitle(updatedBook.getTitle());
+        existing.setAuthor(updatedBook.getAuthor());
+        existing.setPublicationYear(updatedBook.getPublicationYear());
+        return bookRepository.save(existing);
     }
 
     public void deleteBook(Long id) {
-        Book existing = findBookOrThrow(id);
-        books.remove(existing);
-    }
-
-    private Book findBookOrThrow(Long id) {
-        return books.stream()
-                .filter(book -> book.id().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new BookNotFoundException(id));
+        Book existing = getBookById(id);
+        bookRepository.delete(existing);
     }
 }

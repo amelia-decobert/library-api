@@ -3,6 +3,7 @@ package com.example.library_api.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 // Define the class as an entity
@@ -12,6 +13,8 @@ import lombok.Setter;
 // Generate getters & setters automatically (Lombok)
 @Getter
 @Setter
+// Generate an empty Constructor (mandatory for Hibernate to rebuild an object)
+@NoArgsConstructor
 // Generate a Constructor
 @AllArgsConstructor
 public class Book {

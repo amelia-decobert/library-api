@@ -38,6 +38,10 @@ public class BookController {
         return bookMapper.toResponse(bookService.getBookById(id));
     }
 
+    @GetMapping("/books/author/{author}")
+    public List<BookResponse> getBooksByAuthor(@PathVariable String author) {
+        return bookMapper.toResponseList(bookService.getBooksByAuthor(author));
+    }
     @GetMapping("/books/search")
     public List<BookResponse> searchBooks(@RequestParam String title) {
         return bookMapper.toResponseList(bookService.searchByTitle(title));
