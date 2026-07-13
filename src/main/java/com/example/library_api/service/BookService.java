@@ -12,18 +12,13 @@ import com.example.library_api.repository.BookRepository;
 import com.example.library_api.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 
 // Define the class as a Bean
 @Service
@@ -47,7 +42,7 @@ public class BookService {
     }
 
     public List<Book> getRecentBooks(Integer year) {
-        return bookRepository.findByPublicationYearGreaterThan(year);
+        return bookRepository.findBooksPublishedAfter(year);
     }
 
     public List<Book> searchBooks(String title, String author, Integer year) {
@@ -73,6 +68,10 @@ public class BookService {
 
         Author author = authorRepository.findById(request.authorId())
                         .orElseThrow(() -> new AuthorNotFoundException(request.authorId()));
+
+        Set<Category> categories = request.categoryIds() == null
+                ? new HashSet<>()
+                : new HashSet<>(categoryRepository.findAllById(request.categoryIds()));
 
         existing.setTitle(request.title());
         existing.setAuthor(author);

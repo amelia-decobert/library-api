@@ -22,7 +22,7 @@ public class Category {
 
     @Column(
             nullable = false,
-    unique = true)
+            unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "categories")

@@ -12,22 +12,22 @@ import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
     @Override
-    @EntityGraph(attributePaths = "author", "categories")
+    @EntityGraph(attributePaths = {"author", "categories"})
     Page<Book> findAll(Pageable pageable);
 
-    @EntityGraph(attributePaths = "author", "categories")
+    @EntityGraph(attributePaths = {"author", "categories"})
     List<Book> findByAuthor(String author);
 
-    @EntityGraph(attributePaths = "author", "categories")
+    @EntityGraph(attributePaths = {"author", "categories"})
     List<Book> findByAuthorId(Long authorId);
 
-    @EntityGraph(attributePaths = "author", "categories")
-    List<Book> findByTitleContainingIgnoreCase(String title);
+//    @EntityGraph(attributePaths = {"author", "categories"})
+//    List<Book> findByTitleContainingIgnoreCase(String title);
 
-    @EntityGraph(attributePaths = "author", "categories")
-    List<Book> findByPublicationYearGreaterThan(Integer year);
+//    @EntityGraph(attributePaths = {"author", "categories"})
+//    List<Book> findByPublicationYearGreaterThan(Integer year);
 
-    @EntityGraph(attributePaths = "author", "categories")
+    @EntityGraph(attributePaths = {"author", "categories"})
     @Query("SELECT b FROM Book b WHERE " +
             "(:title IS NULL OR LOWER(b.title) LIKE LOWER(CONCAT('%', CAST(:title AS string), '%'))) AND " +
             "(:author IS NULL OR LOWER(b.author.name) LIKE LOWER(CONCAT('%', CAST(:author AS string), '%'))) AND " +
