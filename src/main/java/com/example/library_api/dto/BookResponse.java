@@ -1,9 +1,12 @@
 package com.example.library_api.dto;
 
+import java.util.Set;
+
 public record BookResponse(
         Long id,
         String title,
-        String author,
-        String isbn,
-        Integer publicationYear) {
+        AuthorResponse author,
+        Set<CategoryResponse> categories,
+        Integer publicationYear,
+        String isbn) {
 }

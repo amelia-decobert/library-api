@@ -2,11 +2,15 @@ package com.example.library_api.controller;
 
 import com.example.library_api.dto.BookRequest;
 import com.example.library_api.dto.BookResponse;
+import com.example.library_api.dto.PageResponse;
 import com.example.library_api.mapper.BookMapper;
 import com.example.library_api.model.Book;
 import com.example.library_api.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +30,17 @@ public class BookController {
     private final BookMapper bookMapper;
 
     @GetMapping("/books")
-    public List<BookResponse> getAllBooks(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return bookMapper.toResponseList(bookService.getAllBooks(page, size));
+   public PageResponse<BookResponse> getAllBooks(@PageableDefault(size = 10, sort = "title") Pageable pageable) {
+        Page<Book> page = bookService.getAllBooks(pageable);
+        List<BookResponse> content = bookMapper.toResponseList(page.getContent());
+        return new PageResponse<>(
+                content,
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isLast()
+        );
     }
 
     @GetMapping("/books/{id}")
@@ -43,7 +54,7 @@ public class BookController {
     }
 
     @GetMapping("/books/recent")
-    public List<BookResponse> getRecentBooks(@RequestParam Integer year) {
+    public List<BookResponse> getRecentBooks(@RequestParam(defaultValue = "2015") Integer year) {
         return bookMapper.toResponseList(bookService.getRecentBooks(year));
     }
 
@@ -57,15 +68,13 @@ public class BookController {
 
     @PostMapping("/books")
     public ResponseEntity<BookResponse> createBook(@Valid @RequestBody BookRequest request) {
-        Book book = bookMapper.toEntity(request);
-        Book created = bookService.createBook(book);
+        Book created = bookService.createBook(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(bookMapper.toResponse(created));
     }
 
     @PutMapping("/books/{id}")
     public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @Valid @RequestBody BookRequest request) {
-        Book book = bookMapper.toEntity(request);
-        Book updated = bookService.updateBook(id, book);
+        Book updated = bookService.updateBook(id, request);
         return ResponseEntity.ok(bookMapper.toResponse(updated));
     }
 

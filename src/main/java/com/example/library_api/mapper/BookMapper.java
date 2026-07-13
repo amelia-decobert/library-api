@@ -36,10 +36,10 @@ public class BookMapper {
         return new BookResponse(
                 book.getId(),
                 book.getTitle(),
-                book.getIsbn(),
-                book.getPublicationYear(),
                 authorMapper.toResponse(book.getAuthor()),
-                categoryResponses
+                categoryResponses,
+                book.getPublicationYear(),
+                book.getIsbn()
         );
     }
 
