@@ -1,75 +1,89 @@
 package com.example.library_api.service;
 
+import com.example.library_api.dto.BookRequest;
+import com.example.library_api.exception.AuthorNotFoundException;
 import com.example.library_api.exception.BookNotFoundException;
+import com.example.library_api.mapper.BookMapper;
+import com.example.library_api.model.Author;
 import com.example.library_api.model.Book;
-import org.springframework.http.HttpStatus;
+import com.example.library_api.model.Category;
+import com.example.library_api.repository.AuthorRepository;
+import com.example.library_api.repository.BookRepository;
+import com.example.library_api.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Set;
 
 // Define the class as a Bean
 @Service
+@RequiredArgsConstructor
 public class BookService {
-    // Initialise a list in memory
-    private final List<Book> books = new ArrayList<>(List.of(
-            new Book(1L, "Clean Code"),
-            new Book(2L, "The Rules Of Work"),
-            new Book(3L, "Le Parfum")
-    ));
+    private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
+    private final CategoryRepository categoryRepository;
+    private final BookMapper bookMapper;
 
-    // Generate unique auto incremented id from the last id
-    private final AtomicLong idGenerator = new AtomicLong(3L);
-
-    public List<Book> getAllBooks(int page, int size) {
-        int fromIndex = page * size;
-        if (fromIndex >= books.size()) {
-            return List.of();
-        }
-        int toIndex = Math.min(fromIndex + size, books.size());
-        return books.subList(fromIndex, toIndex);
+    public Page<Book> getAllBooks(Pageable pageable) {
+        return bookRepository.findAll(pageable);
     }
 
     public Book getBookById(Long id) {
-        return findBookOrThrow(id);
+        return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
     }
 
-    public List<Book> searchByTitle(String title) {
-        return books.stream()
-                .filter(book -> book.title().toLowerCase().contains(title.toLowerCase()))
-                .toList();
+    public List<Book> getBooksByAuthor(String author) {
+        return bookRepository.findByAuthor(author);
     }
 
-    public Book createBook(Book book) {
-        // id generated only by server
-        Long newId = idGenerator.incrementAndGet();
-        Book created = new Book(newId, book.title());
-        books.add(created);
-        return created;
+    public List<Book> getRecentBooks(Integer year) {
+        return bookRepository.findBooksPublishedAfter(year);
     }
 
-    // Book is a record so is impossible to update,
-    // Create a new object Book with same id but different title,
-    // Then replace previous one int the list
-    public Book updateBook(Long id, Book updatedBook) {
-        Book existing = findBookOrThrow(id);
-        Book updated = new Book(existing.id(), updatedBook.title());
-        books.remove(existing);
-        books.add(updated);
-        return updated;
+    public List<Book> searchBooks(String title, String author, Integer year) {
+        return bookRepository.search(title, author, year);
     }
 
+    @Transactional
+    public Book createBook(BookRequest request) {
+        Author author = authorRepository.findById(request.authorId())
+                .orElseThrow(() -> new AuthorNotFoundException(request.authorId()));
+
+        Set<Category> categories = request.categoryIds() == null
+                ? new HashSet<>()
+                : new HashSet<>(categoryRepository.findAllById(request.categoryIds()));
+
+        Book book = bookMapper.toEntity(request.title(), request.isbn(), request.publicationYear(), author, categories);
+        return bookRepository.save(book);
+    }
+
+    @Transactional
+    public Book updateBook(Long id, BookRequest request) {
+        Book existing = getBookById(id);
+
+        Author author = authorRepository.findById(request.authorId())
+                        .orElseThrow(() -> new AuthorNotFoundException(request.authorId()));
+
+        Set<Category> categories = request.categoryIds() == null
+                ? new HashSet<>()
+                : new HashSet<>(categoryRepository.findAllById(request.categoryIds()));
+
+        existing.setTitle(request.title());
+        existing.setAuthor(author);
+        existing.setIsbn(request.isbn());
+        existing.setPublicationYear(request.publicationYear());
+        existing.setCategories(categories);
+        return bookRepository.save(existing); // Launch an UPDATE sql rather than an INSERT
+    }
+
+    @Transactional
     public void deleteBook(Long id) {
-        Book existing = findBookOrThrow(id);
-        books.remove(existing);
-    }
-
-    private Book findBookOrThrow(Long id) {
-        return books.stream()
-                .filter(book -> book.id().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new BookNotFoundException(id));
+        Book existing = getBookById(id);
+        bookRepository.delete(existing);
     }
 }

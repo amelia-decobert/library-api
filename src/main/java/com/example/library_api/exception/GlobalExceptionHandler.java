@@ -13,8 +13,8 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(BookNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleBookNotFound(BookNotFoundException ex) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(NotFoundException ex) {
         Map<String, Object> body = Map.of(
                 "timestamp", LocalDateTime.now().toString(),
                 "status", HttpStatus.NOT_FOUND.value(),
