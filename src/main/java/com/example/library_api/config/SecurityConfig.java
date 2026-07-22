@@ -21,7 +21,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Temporarily disable CSRF to allow POST /books with Basic Auth
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/health").permitAll() // Allow any request to this endpoint without authentication
-                        .requestMatchers(HttpMethod.GET, "/books", "/books/**").permitAll() // Allow read-only to these endpoints without authentication
+                        .requestMatchers(HttpMethod.GET, "/books", "/books/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/books/**").hasRole("ADMIN")
                         .anyRequest().authenticated()); // Any other request requires valid authentication
 
         // Activate a feature with its default configuration
