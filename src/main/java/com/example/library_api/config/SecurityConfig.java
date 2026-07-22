@@ -1,5 +1,6 @@
 package com.example.library_api.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,10 +17,12 @@ public class SecurityConfig {
     @Bean
     // Declare security rules
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/health").permitAll() // Allow any request to this endpoint without authentication
-                .requestMatchers(HttpMethod.GET, "/books", "/books/**").permitAll() // Allow read-only to these endpoints without authentication
-                .anyRequest().authenticated()); // Any other request requires valid authentication
+        http
+                .csrf(csrf -> csrf.disable()) // Temporarily disable CSRF to allow POST /books with Basic Auth
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/health").permitAll() // Allow any request to this endpoint without authentication
+                        .requestMatchers(HttpMethod.GET, "/books", "/books/**").permitAll() // Allow read-only to these endpoints without authentication
+                        .anyRequest().authenticated()); // Any other request requires valid authentication
 
         // Activate a feature with its default configuration
         http.httpBasic(Customizer.withDefaults());
