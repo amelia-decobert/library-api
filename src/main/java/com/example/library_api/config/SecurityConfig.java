@@ -1,5 +1,6 @@
 package com.example.library_api.config;
 
+import com.example.library_api.security.SecurityExceptionHandler;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     // Declare security rules
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            SecurityExceptionHandler securityExceptionHandler) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // Temporarily disable CSRF to allow POST /books with Basic Auth
                 .authorizeHttpRequests(auth -> auth
@@ -30,6 +33,11 @@ public class SecurityConfig {
 
         // Activate a feature with its default configuration
         http.httpBasic(Customizer.withDefaults());
+
+        // HttpSecurity config section dedicated to handling security errors
+        http.exceptionHandling(exception -> exception
+                .authenticationEntryPoint(securityExceptionHandler)
+                .accessDeniedHandler(securityExceptionHandler));
 
         return http.build();
     }
