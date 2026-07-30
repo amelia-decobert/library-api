@@ -21,7 +21,7 @@ public class SecurityConfig {
             HttpSecurity http,
             SecurityExceptionHandler securityExceptionHandler) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Temporarily disable CSRF to allow POST /books with Basic Auth
+//                .csrf(csrf -> csrf.disable()) // Temporarily disable CSRF to allow POST /books with Basic Auth
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/health").permitAll() // Allow any request to this endpoint without authentication
                         .requestMatchers(HttpMethod.GET, "/books", "/books/**").hasAnyRole("USER", "ADMIN")
@@ -29,6 +29,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/books/**").hasRole("ADMIN")
                         .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/me", "/profile").authenticated()
                         .anyRequest().authenticated()); // Any other request requires valid authentication
 
         // Activate a feature with its default configuration
