@@ -5,7 +5,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,9 +23,10 @@ public class SecurityConfig {
             HttpSecurity http,
             SecurityExceptionHandler securityExceptionHandler) throws Exception {
         http
-//                .csrf(csrf -> csrf.disable()) // Temporarily disable CSRF to allow POST /books with Basic Auth
+                .csrf(csrf -> csrf.disable()) // Disable CSRF because stateless API
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/health").permitAll() // Allow any request to this endpoint without authentication
+                        .requestMatchers("/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/books", "/books/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
@@ -47,5 +50,11 @@ public class SecurityConfig {
     // Transform a password
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    // Expose an authentication manager that can be used in a controller
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 }
