@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = Map.of(
                 "timestamp", LocalDateTime.now().toString(),
                 "status", HttpStatus. UNAUTHORIZED.value(),
-                "message", "Invalid data"
+                "message", "Invalid credentials"
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
     }

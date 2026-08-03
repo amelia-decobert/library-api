@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class AuthenticationController {
+//    Authentication manager for authenticating user credentials
     private final AuthenticationManager authenticationManager;
+//    Service for generating and managing JWT tokens
     private final JwtService jwtService;
 
     @PostMapping("/auth/login")
