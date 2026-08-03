@@ -8,6 +8,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,6 +29,7 @@ class BookControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser(username = "jim", roles = "USER")
     @DisplayName("[GET /books] should return a list of books with status 200")
     void getBooks_shouldReturnPaginatedList() throws Exception {
         // ACT & ASSERT (perform GET request and verify response status and structure)
@@ -38,6 +40,7 @@ class BookControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
     @DisplayName("[POST /books] should create a book and return a status 201")
     void createBook_shouldReturn201AndCreatedBook() throws Exception {
         // ARRANGE (JSON request body for creating a new book)
@@ -60,6 +63,7 @@ class BookControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "jim", roles = "USER")
     @DisplayName("[GET /books/{id}] should return a status 404 when the id does not exist")
     void getBookById_shouldReturn404_whenNotFound() throws Exception {
         // ACT & ASSERT (perform GET request for a non-existent book and verify error response)
