@@ -38,12 +38,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/categories", "/categories/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/categories").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/categories/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/categories/**").hasRole("ADMIN")
 //                        -- LOAN --
                         .requestMatchers(HttpMethod.GET, "/loans").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "loans/me").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "books/*/borrow").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "loans/*/return").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/loans/me").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/books/*/borrow").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/loans/*/return").hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/me", "/profile").authenticated()
