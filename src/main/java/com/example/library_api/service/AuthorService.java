@@ -28,11 +28,26 @@ public class AuthorService {
     public Author createAuthor(String name) {
         Author author = new Author();
         author.setName(name);
+
         return authorRepository.save(author);
     }
 
     public List<Book> getBooksByAuthorId(Long id) {
         getAuthorById(id);
+
         return bookRepository.findByAuthorId(id);
+    }
+
+    public Author updateAuthor(Long id, String name) {
+        Author author = getAuthorById(id);
+        author.setName(name);
+
+        return authorRepository.save(author);
+    }
+
+    public void deleteAuthor(Long id) {
+        Author author = getAuthorById(id);
+
+        authorRepository.delete(author);
     }
 }

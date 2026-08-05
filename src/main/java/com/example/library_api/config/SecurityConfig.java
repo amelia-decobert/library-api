@@ -24,10 +24,27 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/health").permitAll() // Allow any request to this endpoint without authentication
+//                        -- BOOK --
                         .requestMatchers(HttpMethod.GET, "/books", "/books/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/books/**").hasRole("ADMIN")
+//                        -- AUTHOR --
+                        .requestMatchers(HttpMethod.GET, "/authors", "/authors/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/authors").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/authors/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/authors/**").hasRole("ADMIN")
+//                        -- CATEGORY --
+                        .requestMatchers(HttpMethod.GET, "/categories", "/categories/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/categories").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "categories/**").hasRole("ADMIN")
+//                        -- LOAN --
+                        .requestMatchers(HttpMethod.GET, "/loans").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "loans/me").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "books/*/borrow").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "loans/*/return").hasAnyRole("USER", "ADMIN")
+
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/me", "/profile").authenticated()
                         .anyRequest().authenticated()); // Any other request requires valid authentication
