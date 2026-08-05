@@ -1,7 +1,9 @@
 package com.example.library_api.config;
 
+import com.example.library_api.security.JwtAuthenticationFilter;
 import com.example.library_api.security.SecurityExceptionHandler;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,21 +12,28 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final SecurityExceptionHandler securityExceptionHandler;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
     @Bean
     // Declare security rules
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            SecurityExceptionHandler securityExceptionHandler) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF because stateless API
-                .authorizeHttpRequests(auth -> auth
+            HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable()); // Disable CSRF because stateless API
+
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/health").permitAll() // Allow any request to this endpoint without authentication
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/books", "/books/**").hasAnyRole("USER", "ADMIN")
@@ -35,13 +44,12 @@ public class SecurityConfig {
                         .requestMatchers("/me", "/profile").authenticated()
                         .anyRequest().authenticated()); // Any other request requires valid authentication
 
-        // Activate a feature with its default configuration
-        http.httpBasic(Customizer.withDefaults());
-
         // HttpSecurity config section dedicated to handling security errors
         http.exceptionHandling(exception -> exception
                 .authenticationEntryPoint(securityExceptionHandler)
                 .accessDeniedHandler(securityExceptionHandler));
+
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
