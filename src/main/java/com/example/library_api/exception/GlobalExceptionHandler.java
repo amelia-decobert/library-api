@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
                 "status", HttpStatus.NOT_FOUND.value(),
                 "message", ex.getMessage()
         );
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
@@ -29,21 +30,35 @@ public class GlobalExceptionHandler {
                 .map(FieldError::getDefaultMessage)
                 .findFirst()
                 .orElse("Invalid data");
+
         Map<String, Object> body = Map.of(
                 "timestamp", LocalDateTime.now().toString(),
                 "status", HttpStatus.BAD_REQUEST.value(),
                 "message", message
         );
+
         return ResponseEntity.badRequest().body(body);
     }
 
-    @ExceptionHandler(org.springframework.security.core.AuthenticationException.class)
-    public ResponseEntity<Map<String, Object>> handleLoginFailure(org.springframework.security.core.AuthenticationException ex) {
+    @ExceptionHandler(BookNotAvailableException.class)
+    public ResponseEntity<Map<String, Object>> handleBookNotAvailable(BookNotAvailableException ex) {
         Map<String, Object> body = Map.of(
                 "timestamp", LocalDateTime.now().toString(),
-                "status", HttpStatus. UNAUTHORIZED.value(),
-                "message", "Invalid credentials"
+                "status", HttpStatus.CONFLICT.value(),
+                "message", ex.getMessage()
         );
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
+    @ExceptionHandler(ForbiddenLoanAccessException.class)
+    public ResponseEntity<Map<String, Object>> handleForbiddenLoanAccess(ForbiddenLoanAccessException ex) {
+        Map<String, Object> body = Map.of(
+                "timestamp", LocalDateTime.now().toString(),
+                "status", HttpStatus.FORBIDDEN.value(),
+                "message", ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
     }
 }
