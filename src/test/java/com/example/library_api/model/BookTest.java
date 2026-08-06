@@ -34,13 +34,14 @@ class BookTest {
         Set<Category> categories = new HashSet<>();
 
         // ACT
-        Book book = new Book(1L, "Clean Code", "978-1", 2008, author, categories);
+        Book book = new Book(1L, "Clean Code", "978-1", 2008, true, author, categories);
 
         // ASSERT
         assertEquals(1L, book.getId());
         assertEquals("Clean Code", book.getTitle());
         assertEquals("978-1", book.getIsbn());
         assertEquals(2008, book.getPublicationYear());
+        assertTrue(book.isAvailable());
         assertEquals(author, book.getAuthor());
         assertEquals(categories, book.getCategories());
     }
