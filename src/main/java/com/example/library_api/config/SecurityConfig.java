@@ -27,14 +27,13 @@ public class SecurityConfig {
 
     @Bean
     // Declare security rules
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable()); // Disable CSRF because stateless API
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/health").permitAll() // Allow any request to this endpoint without authentication
+                        .requestMatchers("/health", "/auth/login").permitAll() // Allow any request to this endpoint without authentication
 //                        -- BOOK --
                         .requestMatchers(HttpMethod.GET, "/books", "/books/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
