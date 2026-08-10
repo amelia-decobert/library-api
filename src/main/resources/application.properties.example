@@ -7,5 +7,15 @@ spring.datasource.password=your_password
 
 # JPA configuration
 # ddl-auto=update only in development
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.open_in-view=false
+#spring.jpa.hibernate.ddl-auto=update
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.open-in-view=false
+spring.jpa.show-sql=true
+
+# Flyway
+spring.flyway.enabled=true
+spring.flyway.locations=classpath:db/migration
+
+# JWT configuration
+jwt.secret=your_secret_key
+jwt.expiration=86400000 (24h in ms)

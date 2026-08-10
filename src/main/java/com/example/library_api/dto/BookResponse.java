@@ -8,5 +8,6 @@ public record BookResponse(
         AuthorResponse author,
         Set<CategoryResponse> categories,
         Integer publicationYear,
+        boolean available,
         String isbn) {
 }

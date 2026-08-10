@@ -9,6 +9,7 @@ import com.example.library_api.model.Author;
 import com.example.library_api.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,21 @@ public class AuthorController {
     @PostMapping("/authors")
     public ResponseEntity<AuthorResponse> createAuthor(@Valid @RequestBody AuthorRequest request) {
         Author created = authorService.createAuthor(request.name());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(authorMapper.toResponse(created));
+    }
+
+    @PutMapping("/authors/{id}")
+    public AuthorResponse updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorRequest request) {
+        Author updated = authorService.updateAuthor(id, request.name());
+
+        return authorMapper.toResponse(updated);
+    }
+
+    @DeleteMapping("/authors/{id}")
+    public ResponseEntity<Void> deleteAuthor(@PathVariable Long id) {
+        authorService.deleteAuthor(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

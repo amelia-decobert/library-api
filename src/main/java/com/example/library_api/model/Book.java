@@ -34,6 +34,9 @@ public class Book {
     @Column(name = "publication_year")
     private Integer publicationYear;
 
+    @Column(nullable = false)
+    private boolean available = true;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "author_id",
