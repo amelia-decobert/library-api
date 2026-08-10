@@ -1,9 +1,11 @@
 package com.example.library_api.controller;
 
+import com.example.library_api.dto.LoanRequest;
 import com.example.library_api.dto.LoanResponse;
 import com.example.library_api.mapper.LoanMapper;
 import com.example.library_api.model.Loan;
 import com.example.library_api.service.LoanService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,20 @@ public class LoanController {
         return loanMapper.toResponseList(loanService.getAllLoans());
     }
 
+    @GetMapping("/loans/overdue")
+    public List<LoanResponse> getOverdueLoans() {
+        return loanMapper.toResponseList(loanService.getOverdueLoans());
+    }
+
+    // Creation of a Loan resource
+    @PostMapping("/loans")
+    public ResponseEntity<LoanResponse> createLoan(@Valid @RequestBody LoanRequest request, Authentication authentication) {
+        Loan loan = loanService.borrowBook(request.bookId(), authentication.getName());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(loanMapper.toResponse(loan));
+    }
+
+    // Action on a specific book
     @PostMapping("/books/{id}/borrow")
     public ResponseEntity<LoanResponse> borrowBook(@PathVariable Long id, Authentication authentication) {
         Loan loan = loanService.borrowBook(id, authentication.getName());
@@ -38,11 +54,7 @@ public class LoanController {
 
     @PutMapping("/books/{id}/return")
     public LoanResponse returnBook(@PathVariable Long id, Authentication authentication) {
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .anyMatch(role -> role.equals("ROLE_ADMIN"));
-
-        Loan loan = loanService.returnBook(id, authentication.getName(), isAdmin);
+        Loan loan = loanService.returnBook(id, authentication.getName());
 
         return loanMapper.toResponse(loan);
     }
