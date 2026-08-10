@@ -9,23 +9,24 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
     @Override
     @EntityGraph(attributePaths = {"author", "categories"})
     Page<Book> findAll(Pageable pageable);
 
+//    @EntityGraph(attributePaths = {"author", "categories"})
+//    List<Book> findByAuthorName(String name);
     @EntityGraph(attributePaths = {"author", "categories"})
-    List<Book> findByAuthor(String author);
+    List<Book> findByAuthorNameContainingIgnoreCase(String name);
 
     @EntityGraph(attributePaths = {"author", "categories"})
     List<Book> findByAuthorId(Long authorId);
 
-//    @EntityGraph(attributePaths = {"author", "categories"})
-//    List<Book> findByTitleContainingIgnoreCase(String title);
-
-//    @EntityGraph(attributePaths = {"author", "categories"})
-//    List<Book> findByPublicationYearGreaterThan(Integer year);
+    @Override
+    @EntityGraph(attributePaths = {"author", "categories"})
+    Optional<Book> findById(Long id);
 
     @EntityGraph(attributePaths = {"author", "categories"})
     @Query("SELECT b FROM Book b WHERE " +
@@ -36,6 +37,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
                       @Param("author") String author,
                       @Param("year") Integer year);
 
+    @EntityGraph(attributePaths = {"author", "categories"})
     @Query("SELECT b FROM Book b WHERE b.publicationYear > :year ORDER BY b.publicationYear DESC")
     List<Book> findBooksPublishedAfter(@Param("year") Integer year);
 }
