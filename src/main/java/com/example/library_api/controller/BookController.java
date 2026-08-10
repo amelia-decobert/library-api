@@ -9,6 +9,7 @@ import com.example.library_api.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//@Tag(name = "Books", description = "APIs for managing books in the library")
 // Define the class as a REST web controller
 @RestController
 // Generate automatically a Constructor (Lombok)
@@ -34,8 +36,8 @@ public class BookController {
 
 //    -- GET /books --
     @Operation(
-            summary = "Read list books",
-            description = "Return a list of books, sorted by title, with pagination"
+            summary = "Read the list of all books",
+            description = "Returns a paginated list of books sorted by title (10 items per page, by default)"
     )
 
     @ApiResponses({
@@ -56,10 +58,10 @@ public class BookController {
         );
     }
 
-//    -- GET /books/{id} -- 401
+//    -- GET /books/{id} --
 @Operation(
-        summary = "Read book details",
-        description = "Return the details of a book by his id"
+        summary = "Read the details of a book",
+        description = "Gets a book by his id and returns the details of that book"
 )
 
 @ApiResponses({
@@ -72,15 +74,14 @@ public class BookController {
         return bookMapper.toResponse(bookService.getBookById(id));
     }
 
-//    -- GET /books/author/{author} -- 401
+//    -- GET /books/author/{author} --
 @Operation(
-        summary = "",
-        description = ""
+        summary = "Read an author's book list",
+        description = "Gets an author by his name and returns a list of books by that author"
 )
 
 @ApiResponses({
-        @ApiResponse(responseCode = "", description = ""),
-        @ApiResponse(responseCode = "", description = "")
+        @ApiResponse(responseCode = "200", description = "Books by the specified author successfully retrieved")
 })
 
     @GetMapping("/books/author/{author}")
@@ -88,14 +89,14 @@ public class BookController {
         return bookMapper.toResponseList(bookService.getBooksByAuthor(author));
     }
 
-//    -- GET /books/recent -- 401
+//    -- GET /books/recent --
 @Operation(
-        summary = "",
-        description = ""
+        summary = "Read the list of recent books",
+        description = "Returns a list of books published after 2015 (by default)"
 )
 
 @ApiResponses({
-        @ApiResponse(responseCode = "", description = ""),
+        @ApiResponse(responseCode = "200", description = "Recent books successfully retrieved"),
 })
 
     @GetMapping("/books/recent")
@@ -105,8 +106,8 @@ public class BookController {
 
 //    -- GET /books/search --
 @Operation(
-        summary = "Read a specific search",
-        description = "Return search results based on the information provided"
+        summary = "Read the results of a specific search",
+        description = "Returns search results based on the information provided"
 )
 
 @ApiResponses({
@@ -123,13 +124,14 @@ public class BookController {
 
 //    -- POST /books --
 @Operation(
-        summary = "Create book",
-        description = "Add a book in database"
+        summary = "Create a book",
+        description = "Adds a book in database ; Admin rights required"
 )
 
 @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Book successfully added"),
-        @ApiResponse(responseCode = "403", description = "You do not have the right to create a book")
+        @ApiResponse(responseCode = "400", description = "Invalid book data provided"),
+        @ApiResponse(responseCode = "403", description = "User does not have the right to create a book")
 })
 
     @PostMapping("/books")
@@ -140,13 +142,13 @@ public class BookController {
 
 //    -- PUT /books/{id} --
 @Operation(
-        summary = "Update book",
-        description = "Get a book by his id and modify his data"
+        summary = "Update a book",
+        description = "Gets a book by his id and modify its data ; Admin rights required"
 )
 
 @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Books successfully updated"),
-        @ApiResponse(responseCode = "403", description = "You do not have the right to update a book")
+        @ApiResponse(responseCode = "403", description = "User does not have the right to update a book")
 })
 
     @PutMapping("/books/{id}")
@@ -157,13 +159,13 @@ public class BookController {
 
 //    -- DELETE /books/{id} --
 @Operation(
-        summary = "Delete book",
-        description = "Get a book by his id and remove it from the database"
+        summary = "Delete a book",
+        description = "Gets a book by his id and removes it from the database ; Admin rights required"
 )
 
 @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Books successfully deleted"),
-        @ApiResponse(responseCode = "403", description = "You do not have the right to delete a book")
+        @ApiResponse(responseCode = "403", description = "User does not have the right to delete a book")
 })
 
     @DeleteMapping("/books/{id}")
