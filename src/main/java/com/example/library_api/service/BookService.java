@@ -37,8 +37,8 @@ public class BookService {
         return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
     }
 
-    public List<Book> getBooksByAuthor(String author) {
-        return bookRepository.findByAuthor(author);
+    public List<Book> getBooksByAuthor(String authorName) {
+        return bookRepository.findByAuthorNameContainingIgnoreCase(authorName);
     }
 
     public List<Book> getRecentBooks(Integer year) {
