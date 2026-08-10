@@ -1,9 +1,6 @@
 package com.example.library_api.service;
 
-import com.example.library_api.exception.BookNotAvailableException;
-import com.example.library_api.exception.BookNotFoundException;
-import com.example.library_api.exception.ForbiddenLoanAccessException;
-import com.example.library_api.exception.LoanNotFoundException;
+import com.example.library_api.exception.*;
 import com.example.library_api.model.Book;
 import com.example.library_api.model.Loan;
 import com.example.library_api.model.LoanStatus;
@@ -23,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LoanService {
     private static final int LOAN_PERIOD_DAYS = 14;
+    private static final int MAX_ACTIVE_LOANS = 5;
 
     private final LoanRepository loanRepository;
     private final BookRepository bookRepository;
@@ -30,6 +28,11 @@ public class LoanService {
 
     @Transactional
     public Loan borrowBook(Long bookId, String username) {
+        long activeLoans = loanRepository.countByUserUsernameAndStatus(username, LoanStatus.BORROWED);
+        if (activeLoans >= MAX_ACTIVE_LOANS) {
+            throw new MaxLoansExceededException(username);
+        }
+
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookNotFoundException(bookId));
 
@@ -54,11 +57,11 @@ public class LoanService {
     }
 
     @Transactional
-    public Loan returnBook(Long loanId, String username, boolean isAdmin) {
+    public Loan returnBook(Long loanId, String username) {
         Loan loan = loanRepository.findById(loanId)
                 .orElseThrow(() -> new LoanNotFoundException(loanId));
 
-        if (!isAdmin && !loan.getUser().getUsername().equals(username)) {
+        if (!loan.getUser().getUsername().equals(username)) {
             throw new ForbiddenLoanAccessException();
         }
 
@@ -78,5 +81,9 @@ public class LoanService {
 
     public List<Loan> getAllLoans() {
         return loanRepository.findAll();
+    }
+
+    public List<Loan> getOverdueLoans() {
+        return loanRepository.findByStatusAndDueDateBefore(LoanStatus.BORROWED, LocalDate.now());
     }
 }

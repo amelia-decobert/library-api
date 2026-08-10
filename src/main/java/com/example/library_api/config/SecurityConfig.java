@@ -53,6 +53,8 @@ public class SecurityConfig {
 //                        -- LOAN --
                         .requestMatchers(HttpMethod.GET, "/loans").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/loans/me").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/loans/overdue").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/loans").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/books/*/borrow").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/loans/*/return").hasAnyRole("USER", "ADMIN")
 
