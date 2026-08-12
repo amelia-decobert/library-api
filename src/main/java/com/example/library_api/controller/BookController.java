@@ -9,9 +9,9 @@ import com.example.library_api.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -45,7 +45,9 @@ public class BookController {
     })
 
     @GetMapping("/books")
-   public PageResponse<BookResponse> getAllBooks(@PageableDefault(size = 10, sort = "title") Pageable pageable) {
+   public PageResponse<BookResponse> getAllBooks(
+           @ParameterObject
+           @PageableDefault(size = 10, sort = "title") Pageable pageable) {
         Page<Book> page = bookService.getAllBooks(pageable);
         List<BookResponse> content = bookMapper.toResponseList(page.getContent());
         return new PageResponse<>(
