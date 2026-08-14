@@ -1,4 +1,5 @@
 import {Category} from './category.model';
+import {Author} from './author.model';
 
 export interface Book {
   id: number;
@@ -6,6 +7,6 @@ export interface Book {
   isbn: string;
   publicationYear: number;
   available: boolean;
-  author: string;
+  author: Author;
   categories: Category[];
 }

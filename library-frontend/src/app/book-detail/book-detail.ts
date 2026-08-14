@@ -7,10 +7,10 @@ import {Book} from '../models/book.model';
   selector: 'app-book-detail',
   standalone: true,
   imports: [],
-  templateUrl: './book-detail.component.html',
+  templateUrl: './book-detail.html',
   styleUrl: './book-detail.css',
 })
-export class BookDetailComponent implements OnInit {
+export class BookDetail implements OnInit {
   private route = inject(ActivatedRoute);
   private bookService = inject(BookService);
 

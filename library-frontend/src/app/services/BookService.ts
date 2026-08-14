@@ -7,7 +7,7 @@ import {Book} from '../models/book.model';
 @Injectable({providedIn: 'root'})
 export class BookService {
   private http = inject(HttpClient);
-  private baseUrl: 'http://localhost:8080/books';
+  private baseUrl = 'http://localhost:8080/books';
 
   getBooks(page: number = 0, size: number = 10): Observable<PageResponse<Book>> {
     return this.http.get<PageResponse<Book>>(`${this.baseUrl}?page=${page}&size=${size}`);
