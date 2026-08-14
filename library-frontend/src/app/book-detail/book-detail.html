@@ -1,1 +1,14 @@
-<p>book-detail works!</p>
+@if (book) {
+<h1>{{ book.title }}</h1>
+<p>Auteur : {{ book.author.name }}</p>
+<p>Année de publication : {{ book.publicationYear }}</p>
+<p>ISBN : {{ book.isbn }}</p>
+<p>Disponibilité : {{ book.available ? 'Disponible' : 'Emprunté' }}</p>
+<ul>
+  @for (category of book.categories; track category.id) {
+  <li>{{ category.name }}</li>
+  }
+</ul>
+} @else {
+<p>Chargement...</p>
+}
