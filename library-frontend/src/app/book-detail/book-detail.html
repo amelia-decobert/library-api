@@ -1,11 +1,11 @@
-@if (book) {
-<h1>{{ book.title }}</h1>
-<p>Auteur : {{ book.author.name }}</p>
-<p>Année de publication : {{ book.publicationYear }}</p>
-<p>ISBN : {{ book.isbn }}</p>
-<p>Disponibilité : {{ book.available ? 'Disponible' : 'Emprunté' }}</p>
+@if (book(); as b) {
+<h1>{{ b.title }}</h1>
+<p>Auteur : {{ b.author.name }}</p>
+<p>Année de publication : {{ b.publicationYear }}</p>
+<p>ISBN : {{ b.isbn }}</p>
+<p>Disponibilité : {{ b.available ? 'Disponible' : 'Emprunté' }}</p>
 <ul>
-  @for (category of book.categories; track category.id) {
+  @for (category of b.categories; track category.id) {
   <li>{{ category.name }}</li>
   }
 </ul>

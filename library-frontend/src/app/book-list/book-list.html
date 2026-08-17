@@ -1,12 +1,12 @@
 <h1>Liste des livres</h1>
 
-@if (loading) {
+@if (loading()) {
 <p>Chargement...</p>
-} @else if (books.length === 0) {
+} @else if (books().length === 0) {
 <p>Aucun livre trouvé.</p>
 } @else {
 <ul>
-  @for (book of books; track book.id) {
+  @for (book of books(); track book.id) {
   <li>
     <a [routerLink]="['/books', book.id]">
       {{ book.title }} — {{ book.author.name }}

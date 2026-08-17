@@ -1,6 +1,6 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {RouterLink} from '@angular/router';
-import {BookService} from '../services/BookService';
+import {BookService} from '../services/book.service';
 import {Book} from '../models/book.model';
 
 @Component({
@@ -13,19 +13,19 @@ import {Book} from '../models/book.model';
 export class BookList implements OnInit {
   private bookService = inject(BookService);
 
-  books: Book[] = [];
-  loading = true;
+  books = signal<Book[]>([]);
+  loading = signal(true);
 
   ngOnInit(): void {
     this.bookService.getBooks().subscribe({
       next: (response) => {
-        this.books = response.content;
-        this.loading = false;
+        this.books.set(response.content);
+        this.loading.set(false);
       },
       error: (err) => {
-        console.log('Erreur lors du chargement des livres', err);
+        console.error('Erreur lors du chargement des livres', err);
 
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }
