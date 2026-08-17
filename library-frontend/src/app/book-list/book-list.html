@@ -1,5 +1,10 @@
 <h1>Liste des livres</h1>
 
+<a routerLink="/books/new">Ajouter un livre</a>
+
+<input [(ngModel)]="searchTerm" (keyup.enter)="onSearch()" placeholder="Rechercher par titre..." />
+<button (click)="onSearch()">Rechercher</button>
+
 @if (loading()) {
 <p>Chargement...</p>
 } @else if (books().length === 0) {
@@ -8,13 +13,18 @@
 <ul>
   @for (book of books(); track book.id) {
   <li>
-    <a [routerLink]="['/books', book.id]">
-      {{ book.title }} — {{ book.author.name }}
-    </a>
-    @if (!book.available) {
-    <span> (indisponible)</span>
-    }
+    <a [routerLink]="['/books', book.id]">{{ book.title }} — {{ book.author.name }}</a>
+    <a [routerLink]="['/books', book.id, 'edit']">Modifier</a>
+    <button (click)="deleteBook(book.id)">Supprimer</button>
   </li>
   }
 </ul>
+
+<button (click)="previousPage()" [disabled]="page() === 0">Précédent</button>
+<span>Page {{ page() + 1 }} / {{ totalPages() }}</span>
+<button (click)="nextPage()" [disabled]="page() + 1 >= totalPages()">Suivant</button>
+}
+
+@if (errorMessage()) {
+<div class="banner error">{{ errorMessage() }}</div>
 }

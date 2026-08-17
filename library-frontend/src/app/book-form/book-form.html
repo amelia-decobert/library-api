@@ -1,0 +1,37 @@
+<h1>{{ isEditMode() ? 'Modifier le livre' : 'Ajouter un livre' }}</h1>
+
+<form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+  <label>
+    Titre *
+    <input formControlName="title" />
+  </label>
+  @if (bookForm.get('title')?.invalid && bookForm.get('title')?.touched) {
+  <p class="error">Le titre est obligatoire.</p>
+  }
+
+  <label>
+    ISBN
+    <input formControlName="isbn" />
+  </label>
+
+  <label>
+    Année de publication
+    <input formControlName="publicationYear" type="number" />
+  </label>
+
+  <label>
+    Identifiant de l'auteur *
+    <input formControlName="authorId" type="number" />
+  </label>
+  @if (bookForm.get('authorId')?.invalid && bookForm.get('authorId')?.touched) {
+  <p class="error">L'auteur est obligatoire.</p>
+  }
+
+  <button type="submit" [disabled]="bookForm.invalid || loading()">
+    {{ loading() ? 'Enregistrement...' : 'Enregistrer' }}
+  </button>
+</form>
+
+@if (errorMessage()) {
+<div class="banner error">{{ errorMessage() }}</div>
+}
