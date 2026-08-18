@@ -20,7 +20,7 @@ export class Login {
   errorMessage = signal<string | null>(null);
 
   loginForm = this.form.group({
-    username: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required]
   });
 
@@ -30,9 +30,9 @@ export class Login {
     this.loading.set(true);
     this.errorMessage.set(null);
 
-    const { username, password } = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
 
-    this.authService.login(username!, password!).subscribe({
+    this.authService.login(email!, password!).subscribe({
       next: () => {
         this.loading.set(false);
         this.router.navigate(['/books']);
