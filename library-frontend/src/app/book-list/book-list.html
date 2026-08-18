@@ -1,0 +1,34 @@
+<h1>Liste des livres</h1>
+
+@if (authService.isAuthenticated()) {
+  <button (click)="authService.logout()">Se déconnecter</button>
+}
+
+<a routerLink="/books/new">Ajouter un livre</a>
+
+<input [(ngModel)]="searchTerm" (keyup.enter)="onSearch()" placeholder="Rechercher par titre..." />
+<button (click)="onSearch()">Rechercher</button>
+
+@if (loading()) {
+<p>Chargement...</p>
+} @else if (books().length === 0) {
+<p>Aucun livre trouvé.</p>
+} @else {
+<ul>
+  @for (book of books(); track book.id) {
+  <li>
+    <a [routerLink]="['/books', book.id]">{{ book.title }} — {{ book.author.name }}</a>
+    <a [routerLink]="['/books', book.id, 'edit']">Modifier</a>
+    <button (click)="deleteBook(book.id)">Supprimer</button>
+  </li>
+  }
+</ul>
+
+<button (click)="previousPage()" [disabled]="page() === 0">Précédent</button>
+<span>Page {{ page() + 1 }} / {{ totalPages() }}</span>
+<button (click)="nextPage()" [disabled]="page() + 1 >= totalPages()">Suivant</button>
+}
+
+@if (errorMessage()) {
+<div class="banner error">{{ errorMessage() }}</div>
+}
