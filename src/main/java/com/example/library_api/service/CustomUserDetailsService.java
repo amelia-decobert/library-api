@@ -15,15 +15,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { // Exception provided by Spring Security
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " not found"));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { // Exception provided by Spring Security
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found"));
 
         // Build a technical UserDetails object as expected by Spring Security
         return org.springframework.security.core.userdetails.User.builder() // To avoid confusion with User entity from the model package
-                .username(user.getUsername())
+                .username(user.getEmail())
                 .password(user.getPassword())
-                .authorities(new SimpleGrantedAuthority(user.getRole()))
+                .authorities(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
                 .build();
     }
 }

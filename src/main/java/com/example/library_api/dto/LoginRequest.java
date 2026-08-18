@@ -1,4 +1,8 @@
 package com.example.library_api.dto;
 
-public record LoginRequest(String username, String password) {
+import jakarta.validation.constraints.NotBlank;
+
+public record LoginRequest(
+        @NotBlank(message = "Email is mandatory") String email,
+        @NotBlank(message = "Password is mandatory") String password) {
 }
