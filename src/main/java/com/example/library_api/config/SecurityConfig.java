@@ -33,7 +33,7 @@ public class SecurityConfig {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/health", "/auth/login").permitAll() // Allow any request to this endpoint without authentication
+                        .requestMatchers("/health", "/auth/register", "/auth/login").permitAll() // Allow any request to this endpoint without authentication
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 //                        -- BOOK --
                         .requestMatchers(HttpMethod.GET, "/books", "/books/**").hasAnyRole("USER", "ADMIN")

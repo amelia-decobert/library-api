@@ -1,13 +1,18 @@
 package com.example.library_api.controller;
 
 import com.example.library_api.dto.LoginRequest;
-import com.example.library_api.dto.LoginResponse;
+import com.example.library_api.dto.AuthResponse;
+import com.example.library_api.dto.RegisterRequest;
 import com.example.library_api.security.JwtService;
+import com.example.library_api.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,10 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class AuthenticationController {
-    //    Authentication manager for authenticating user credentials
-    private final AuthenticationManager authenticationManager;
-    //    Service for generating and managing JWT tokens
-    private final JwtService jwtService;
+    private final AuthService authService;
+
+    @PostMapping("/auth/register")
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+        AuthResponse response = authService.register(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
     //    Document Swagger
     @Operation(
@@ -41,15 +50,7 @@ public class AuthenticationController {
     @SecurityRequirements
 
     @PostMapping("/auth/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.username(), request.password())
-        );
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-        String token = jwtService.generateToken(userDetails);
-
-        return new LoginResponse(token);
+    public AuthResponse login(@RequestBody LoginRequest request) {
+        return authService.login(request);
     }
 }
