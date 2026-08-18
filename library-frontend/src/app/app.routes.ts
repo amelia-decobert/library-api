@@ -6,7 +6,7 @@ import {BookForm} from './book-form/book-form';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'books', pathMatch: 'full' },
-  { path: 'login', component: Login },
+  { path: 'auth/login', component: Login },
   { path: 'books', component: BookList },
   { path: 'books/new', component: BookForm },
   { path: 'books/:id/edit', component: BookForm },

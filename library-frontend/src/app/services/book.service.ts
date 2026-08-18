@@ -20,7 +20,7 @@ export class BookService {
   private baseUrl = 'http://localhost:8080/books';
 
   private authHeaders(): HttpHeaders {
-    return new HttpHeaders({ Authorization: `Bearer ${this.authService.token()}` });
+    return new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
   }
 
   getBooks(page: number = 0, size: number = 10, sort?: string, search?: string): Observable<PageResponse<Book>> {

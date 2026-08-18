@@ -1,7 +1,7 @@
 <h1>Liste des livres</h1>
 
 @if (authService.isAuthenticated()) {
-  <button (click)="authService.logout()">Se déconnecter</button>
+<button (click)="authService.logout()">Se déconnecter</button>
 }
 
 <a routerLink="/books/new">Ajouter un livre</a>

@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Book } from '../models/book.model';
 import {BookService} from '../services/book.service';
+import {AuthService} from '../services/auth.service';
 
 @Component({
   selector: 'app-book-list',
@@ -12,6 +13,7 @@ import {BookService} from '../services/book.service';
 })
 export class BookList implements OnInit {
   private bookService = inject(BookService);
+  public authService = inject(AuthService);
 
   books = signal<Book[]>([]);
   loading = signal(true);
