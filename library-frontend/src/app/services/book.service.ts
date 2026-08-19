@@ -16,12 +16,7 @@ export interface BookRequest {
 @Injectable({ providedIn: 'root' })
 export class BookService {
   private http = inject(HttpClient);
-  private authService = inject(AuthService);
   private baseUrl = 'http://localhost:8080/books';
-
-  private authHeaders(): HttpHeaders {
-    return new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
-  }
 
   getBooks(page: number = 0, size: number = 10, sort?: string, search?: string): Observable<PageResponse<Book>> {
     let params = new HttpParams().set('page', page).set('size', size);
@@ -37,14 +32,14 @@ export class BookService {
   }
 
   createBook(request: BookRequest): Observable<Book> {
-    return this.http.post<Book>(this.baseUrl, request, { headers: this.authHeaders() });
+    return this.http.post<Book>(this.baseUrl, request);
   }
 
   updateBook(id: number, request: BookRequest): Observable<Book> {
-    return this.http.put<Book>(`${this.baseUrl}/${id}`, request, { headers: this.authHeaders() });
+    return this.http.put<Book>(`${this.baseUrl}/${id}`, request);
   }
 
   deleteBook(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`, { headers: this.authHeaders() });
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

@@ -42,8 +42,7 @@ public class SecurityConfig {
                         .requestMatchers("/health", "/auth/register", "/auth/login").permitAll() // Allow any request to this endpoint without authentication
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 //                        -- BOOK --
-                        .requestMatchers(HttpMethod.GET, "/books", "/books/**").permitAll() // Temporary to create front
-//                        .requestMatchers(HttpMethod.GET, "/books", "/books/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/books", "/books/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/books/**").hasRole("ADMIN")
