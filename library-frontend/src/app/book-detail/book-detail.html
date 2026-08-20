@@ -1,14 +1,88 @@
-@if (book(); as b) {
-<h1>{{ b.title }}</h1>
-<p>Auteur : {{ b.author.name }}</p>
-<p>Année de publication : {{ b.publicationYear }}</p>
-<p>ISBN : {{ b.isbn }}</p>
-<p>Disponibilité : {{ b.available ? 'Disponible' : 'Emprunté' }}</p>
-<ul>
-  @for (category of b.categories; track category.id) {
-  <li>{{ category.name }}</li>
+<main class="detail-container">
+
+  @if (book(); as b) {
+
+  <a class="back-link" routerLink="/books">
+    ← Retour aux livres
+  </a>
+
+  <article class="book-detail-card">
+
+    <div class="book-detail-header">
+
+      <div class="book-cover">
+        📖
+      </div>
+
+      <div>
+        <p class="eyebrow">Détail du livre</p>
+
+        <h1>{{ b.title }}</h1>
+
+        <p class="author">
+          {{ b.author.name }}
+        </p>
+      </div>
+
+    </div>
+
+    <div class="book-details">
+
+      <div class="detail-item">
+        <span class="detail-label">Auteur</span>
+        <span>{{ b.author.name }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Année de publication</span>
+        <span>{{ b.publicationYear }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">ISBN</span>
+        <span>{{ b.isbn }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Disponibilité</span>
+
+        @if (b.available) {
+        <span class="status status-available">
+              Disponible
+            </span>
+        } @else {
+        <span class="status status-borrowed">
+              Emprunté
+            </span>
+        }
+      </div>
+
+    </div>
+
+    <div class="categories">
+
+      <h2>Catégories</h2>
+
+      <div class="category-list">
+
+        @for (category of b.categories; track category.id) {
+        <span class="category">
+              {{ category.name }}
+            </span>
+        }
+
+      </div>
+
+    </div>
+
+  </article>
+
+  } @else {
+
+  <div class="state-message">
+    <p>Chargement du livre...</p>
+  </div>
+
   }
-</ul>
-} @else {
-<p>Chargement...</p>
-}
+
+</main>

@@ -1,11 +1,12 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {BookService} from '../services/book.service';
 import {Book} from '../models/book.model';
 
 @Component({
   selector: 'app-book-detail',
   standalone: true,
+  imports: [RouterLink],
   templateUrl: './book-detail.html',
   styleUrl: './book-detail.css',
 })
