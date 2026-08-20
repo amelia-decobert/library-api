@@ -2,11 +2,12 @@ import {Component, inject, OnInit, signal} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {LoanService} from '../services/loan.service';
 import {Loan} from '../models/loan.model';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-my-loans',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './my-loans.html',
   styleUrl: './my-loans.css',
 })

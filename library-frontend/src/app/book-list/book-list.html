@@ -9,13 +9,16 @@
       </p>
     </div>
 
-    @if (authService.isAuthenticated()) {
+    <a class="back-link-loans" routerLink="/my-loans">
+      Mes emprunts
+    </a>
+
     <button
       class="button button-secondary"
       (click)="authService.logout()">
       Se déconnecter
     </button>
-    }
+
   </header>
 
   <section class="toolbar">

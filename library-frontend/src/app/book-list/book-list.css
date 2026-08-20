@@ -9,6 +9,24 @@
 }
 
 /* =========================
+   Navigation
+   ========================= */
+
+.back-link-loans {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #475569;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 10px 16px;
+}
+
+.back-link-loans:hover {
+  color: #1e293b;
+}
+
+/* =========================
    Header
    ========================= */
 
