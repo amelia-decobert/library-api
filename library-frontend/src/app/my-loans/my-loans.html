@@ -1,0 +1,125 @@
+<main class="page-container">
+
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Library API</p>
+      <h1>Mes emprunts</h1>
+      <p class="page-description">
+        Consultez vos emprunts et gérez les retours de livres.
+      </p>
+    </div>
+  </header>
+
+  @if (loading()) {
+
+  <div class="state-message">
+    <p>Chargement de vos emprunts...</p>
+  </div>
+
+  } @else if (loans().length === 0) {
+
+  <div class="empty-state">
+
+    <div class="empty-icon">
+      📚
+    </div>
+
+    <h2>Aucun emprunt</h2>
+
+    <p>
+      Vous n'avez actuellement aucun livre emprunté.
+    </p>
+
+  </div>
+
+  } @else {
+
+  <section class="loan-list">
+
+    @for (loan of loans(); track loan.id) {
+
+    <article class="loan-card">
+
+      <div class="loan-card-main">
+
+        <div class="book-icon">
+          📖
+        </div>
+
+        <div class="loan-info">
+
+          <h2>
+            {{ loan.book.title }}
+          </h2>
+
+          <div class="loan-dates">
+
+            <div class="date-item">
+                  <span class="date-label">
+                    Emprunté le
+                  </span>
+
+              <span>
+                    {{ loan.loanDate | date:'dd/MM/yyyy' }}
+                  </span>
+            </div>
+
+            <div class="date-item">
+                  <span class="date-label">
+                    Retour prévu le
+                  </span>
+
+              <span>
+                    {{ loan.dueDate | date:'dd/MM/yyyy' }}
+                  </span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="loan-card-actions">
+
+        @if (loan.status === 'BORROWED') {
+
+        <span class="status status-borrowed">
+                En cours
+              </span>
+
+        <button
+          class="button button-primary"
+          (click)="returnBook(loan.id)">
+          Retourner le livre
+        </button>
+
+        } @else {
+
+        <span class="status status-returned">
+                Rendu
+              </span>
+
+        <span class="returned-date">
+                Rendu le {{ loan.returnedDate | date:'dd/MM/yyyy' }}
+              </span>
+
+        }
+
+      </div>
+
+    </article>
+
+    }
+
+  </section>
+
+  }
+
+  @if (errorMessage()) {
+  <div class="banner error">
+    {{ errorMessage() }}
+  </div>
+  }
+
+</main>
