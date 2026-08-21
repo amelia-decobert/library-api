@@ -5,6 +5,8 @@ import {BookList} from './book-list/book-list';
 import {BookForm} from './book-form/book-form';
 import {authGuard} from './auth.guard';
 import {MyLoans} from './my-loans/my-loans';
+import {Loans} from './loans/loans';
+import {adminGuard} from './admin.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'books', pathMatch: 'full' },
@@ -13,5 +15,6 @@ export const routes: Routes = [
   { path: 'books/new', component: BookForm, canActivate: [authGuard] },
   { path: 'books/:id/edit', component: BookForm, canActivate: [authGuard] },
   { path: 'books/:id', component: BookDetail, canActivate: [authGuard] },
-  { path: 'my-loans', component: MyLoans, canActivate: [authGuard]}
+  { path: 'my-loans', component: MyLoans, canActivate: [authGuard] },
+  { path: 'loans', component: Loans, canActivate: [adminGuard] }
 ];

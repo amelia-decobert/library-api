@@ -176,6 +176,38 @@ h1 {
 }
 
 /* =========================
+   States
+   ========================= */
+
+.state-message {
+  padding: 40px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  color: #64748b;
+  text-align: center;
+}
+
+.banner {
+  margin-top: 20px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.banner.success {
+  border: 1px solid #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.banner.error {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+
+/* =========================
    Responsive
    ========================= */
 

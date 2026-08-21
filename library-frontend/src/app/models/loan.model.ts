@@ -1,9 +1,9 @@
-import {Book} from './book.model';
-
 export interface Loan {
   id: number;
-  book: Book;
-  email: string;
+  book: {
+    id: number;
+    title: string
+  };
   loanDate: string;
   dueDate: string;
   returnedDate: string | null;

@@ -9,10 +9,6 @@
       </p>
     </div>
 
-    <a class="back-link-loans" routerLink="/my-loans">
-      Mes emprunts
-    </a>
-
     <button
       class="button button-secondary"
       (click)="authService.logout()">
@@ -38,11 +34,19 @@
       </button>
     </div>
 
-    <a
-      class="button button-accent"
-      routerLink="/books/new">
-      + Ajouter un livre
-    </a>
+    <div class="toolbar-actions">
+      <a class="button button-secondary" routerLink="/my-loans">Mes emprunts</a>
+
+      @if (authService.isAdmin()) {
+      <a class="button button-secondary" routerLink="/loans">Tous les emprunts</a>
+      }
+
+      @if (authService.isAdmin()) {
+      <a class="button button-accent" routerLink="/books/new">+ Ajouter un livre</a>
+      }
+
+    </div>
+
 
   </section>
 
@@ -100,6 +104,8 @@
           Détails
         </a>
 
+        @if (authService.isAdmin()) {
+
         <a
           class="button button-small button-secondary"
           [routerLink]="['/books', book.id, 'edit']">
@@ -111,6 +117,8 @@
           (click)="deleteBook(book.id)">
           Supprimer
         </button>
+
+        }
 
       </div>
 
