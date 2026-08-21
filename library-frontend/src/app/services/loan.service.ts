@@ -8,11 +8,22 @@ export class LoanService {
   private http = inject(HttpClient);
   private baseUrl = 'http://localhost:8080/loans';
 
+  getLoans(): Observable<Loan[]> {
+    return this.http.get<Loan[]>(`${this.baseUrl}/loans`);
+  }
   getMyLoans(): Observable<Loan[]> {
     return this.http.get<Loan[]>(`${this.baseUrl}/me`);
   }
 
-  returnLoan(id: number): Observable<Loan> {
-    return this.http.put<Loan>(`${this.baseUrl}/${id}/return`, {});
+  getOverdueLoans(): Observable<Loan[]> {
+    return this.http.get<Loan[]>(`${this.baseUrl}/loans/overdue`);
+  }
+
+  borrowBook(bookId: number): Observable<Loan> {
+    return this.http.post<Loan>(`${this.baseUrl}/book/${bookId}/borrow`, {});
+  }
+
+  returnLoan(loanId: number): Observable<Loan> {
+    return this.http.put<Loan>(`${this.baseUrl}/${loanId}/return`, {});
   }
 }
