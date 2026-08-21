@@ -46,6 +46,34 @@
   background: #fee2e2;
 }
 
+/* =========================
+   Empty state
+   ========================= */
+
+.empty-state {
+  padding: 56px 24px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+  text-align: center;
+}
+
+.empty-icon {
+  margin-bottom: 12px;
+  font-size: 2.5rem;
+}
+
+.empty-state h2 {
+  margin: 0 0 8px;
+  color: #334155;
+  font-size: 1.2rem;
+}
+
+.empty-state p {
+  margin: 0;
+  color: #64748b;
+}
+
 .banner {
   margin-top: 1.5rem;
   padding: 1rem;

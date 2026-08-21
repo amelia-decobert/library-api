@@ -12,7 +12,19 @@
 
   } @else if (loans().length === 0) {
 
-  <p>Aucun emprunt.</p>
+  <div class="empty-state">
+
+    <div class="empty-icon">
+      📚
+    </div>
+
+    <h2>Aucun emprunt</h2>
+
+    <p>
+      Vous n'avez actuellement aucun livre emprunté.
+    </p>
+
+  </div>
 
   } @else {
 
