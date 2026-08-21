@@ -9,7 +9,8 @@ import {AuthService} from '../services/auth.service';
   selector: 'app-book-list',
   standalone: true,
   imports: [RouterLink, FormsModule],
-  templateUrl: './book-list.html'
+  templateUrl: './book-list.html',
+  styleUrl: './book-list.css',
 })
 export class BookList implements OnInit {
   private bookService = inject(BookService);

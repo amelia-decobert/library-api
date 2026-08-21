@@ -1,0 +1,315 @@
+/* =========================
+   Page
+   ========================= */
+
+.page-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* =========================
+   Navigation
+   ========================= */
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 24px;
+  color: #475569;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: #1e293b;
+  text-decoration: underline;
+}
+
+/* =========================
+   Header
+   ========================= */
+
+.page-header {
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 2rem;
+}
+
+.page-description {
+  margin: 8px 0 0;
+  color: #64748b;
+}
+
+/* =========================
+   Loan list
+   ========================= */
+
+.loan-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* =========================
+   Loan card
+   ========================= */
+
+.loan-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.loan-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+.loan-card-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* =========================
+   Book icon
+   ========================= */
+
+.book-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 56px;
+  border-radius: 6px;
+  background: #e2e8f0;
+  font-size: 1.4rem;
+}
+
+/* =========================
+   Loan information
+   ========================= */
+
+.loan-info {
+  min-width: 0;
+}
+
+.loan-info h2 {
+  margin: 0 0 12px;
+  overflow: hidden;
+  color: #1e293b;
+  font-size: 1.05rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.loan-dates {
+  display: flex;
+  gap: 24px;
+}
+
+.date-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  color: #334155;
+  font-size: 0.85rem;
+}
+
+.date-label {
+  color: #64748b;
+  font-size: 0.75rem;
+}
+
+/* =========================
+   Actions
+   ========================= */
+
+.loan-card-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+/* =========================
+   Status
+   ========================= */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-borrowed {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-returned {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.returned-date {
+  color: #64748b;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* =========================
+   Buttons
+   ========================= */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button-primary {
+  background: #334155;
+  color: #ffffff;
+}
+
+.button-primary:hover {
+  background: #1e293b;
+}
+
+/* =========================
+   Empty state
+   ========================= */
+
+.empty-state {
+  padding: 56px 24px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+  text-align: center;
+}
+
+.empty-icon {
+  margin-bottom: 12px;
+  font-size: 2.5rem;
+}
+
+.empty-state h2 {
+  margin: 0 0 8px;
+  color: #334155;
+  font-size: 1.2rem;
+}
+
+.empty-state p {
+  margin: 0;
+  color: #64748b;
+}
+
+/* =========================
+   Loading
+   ========================= */
+
+.state-message {
+  padding: 40px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  color: #64748b;
+  text-align: center;
+}
+
+/* =========================
+   Error
+   ========================= */
+
+.banner {
+  margin-top: 20px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.banner.error {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 750px) {
+
+  .page-container {
+    padding: 24px 16px;
+  }
+
+  .loan-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .loan-card-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+}
+
+@media (max-width: 500px) {
+
+  .loan-card-main {
+    align-items: flex-start;
+  }
+
+  .loan-dates {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .loan-card-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
