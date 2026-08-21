@@ -100,6 +100,8 @@
           Détails
         </a>
 
+        @if (authService.isAdmin()) {
+
         <a
           class="button button-small button-secondary"
           [routerLink]="['/books', book.id, 'edit']">
@@ -111,6 +113,8 @@
           (click)="deleteBook(book.id)">
           Supprimer
         </button>
+
+        }
 
       </div>
 

@@ -16,9 +16,7 @@
 
       <div>
         <p class="eyebrow">Détails du livre</p>
-
         <h1>{{ b.title }}</h1>
-
       </div>
 
     </div>
@@ -41,20 +39,48 @@
       </div>
 
       <div class="detail-item">
+
         <span class="detail-label">Disponibilité</span>
 
         @if (b.available) {
+
         <span class="status status-available">
               Disponible
             </span>
+
+        <button
+          class="borrow-button"
+          (click)="borrowBook()"
+          [disabled]="borrowing()"
+        >
+          {{ borrowing() ? 'Emprunt...' : 'Emprunter ce livre' }}
+        </button>
+
         } @else {
+
         <span class="status status-borrowed">
               Emprunté
             </span>
+
+        <p>Ce livre est actuellement emprunté.</p>
+
         }
+
       </div>
 
     </div>
+
+    @if (successMessage()) {
+    <div class="banner success">
+      {{ successMessage() }}
+    </div>
+    }
+
+    @if (errorMessage()) {
+    <div class="banner error">
+      {{ errorMessage() }}
+    </div>
+    }
 
     <div class="categories">
 

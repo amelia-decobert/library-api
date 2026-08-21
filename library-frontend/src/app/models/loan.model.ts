@@ -1,11 +1,9 @@
-export interface LoanBook {
-  id: number;
-  title: string
-}
-
 export interface Loan {
   id: number;
-  book: LoanBook;
+  book: {
+    id: number;
+    title: string
+  };
   loanDate: string;
   dueDate: string;
   returnedDate: string | null;

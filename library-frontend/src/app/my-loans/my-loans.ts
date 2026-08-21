@@ -24,13 +24,17 @@ export class MyLoans implements OnInit {
 
   loadLoans(): void {
     this.loading.set(true);
+
     this.loanService.getMyLoans().subscribe({
       next: (loans) => {
         this.loans.set(loans);
+
         this.loading.set(false);
       },
+
       error: () => {
         this.errorMessage.set("Impossible de charger vos emprunts.");
+
         this.loading.set(false);
       }
     });
@@ -39,7 +43,10 @@ export class MyLoans implements OnInit {
   returnBook(loanId: number): void {
     this.loanService.returnLoan(loanId).subscribe({
       next: () => this.loadLoans(),   // recharge la liste après le retour
-      error: () => this.errorMessage.set("Le retour du livre a échoué.")
+
+      error: () => {
+        this.errorMessage.set("Le retour du livre a échoué.");
+      }
     });
   }
 }

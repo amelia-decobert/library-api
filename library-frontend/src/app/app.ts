@@ -1,6 +1,5 @@
-import {Component, inject} from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {AuthService} from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -10,9 +9,4 @@ import {AuthService} from './services/auth.service';
   styleUrl: './app.css'
 })
 export class App {
-  private authService = inject(AuthService);
-
-  constructor() {
-    this.authService.loadProfile();
-  }
 }
