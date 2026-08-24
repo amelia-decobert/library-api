@@ -59,7 +59,7 @@ class BookTest {
         book.setPublicationYear(1949);
 
         // ASSERT
-        assertEquals("wrong title", book.getTitle());
+        assertEquals("1984", book.getTitle());
         assertEquals(1949, book.getPublicationYear());
     }
 
