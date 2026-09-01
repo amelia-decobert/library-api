@@ -17,14 +17,12 @@ public class MeController {
 
     @GetMapping("/me")
     public Map<String, String> me(Authentication authentication) {
-        User user = userRepository.findByUsername(authentication.getName())
+        User user = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        String role = user.getRole().replace("ROLE_", "");
-
         return Map.of(
-                "username", user.getUsername(),
-                "role", role
+                "email", user.getEmail(),
+                "role", user.getRole().name()
         );
     }
 }

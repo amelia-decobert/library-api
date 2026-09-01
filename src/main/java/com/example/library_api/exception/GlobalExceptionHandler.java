@@ -83,4 +83,15 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
+
+    @ExceptionHandler(EmailAlreadyUsedException.class)
+    public ResponseEntity<Map<String, Object>> handleEmailAlreadyUsed(EmailAlreadyUsedException ex) {
+        Map<String, Object> body = Map.of(
+                "timestamp", LocalDateTime.now().toString(),
+                "status", HttpStatus.CONFLICT.value(),
+                "message", ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
 }

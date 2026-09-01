@@ -1,0 +1,161 @@
+<main class="page-container">
+
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Library API</p>
+      <h1>Liste des livres</h1>
+      <p class="page-description">
+        Consultez et gérez les livres disponibles dans la bibliothèque.
+      </p>
+    </div>
+
+    <button
+      class="button button-secondary"
+      (click)="authService.logout()">
+      Se déconnecter
+    </button>
+
+  </header>
+
+  <section class="toolbar">
+
+    <div class="search-container">
+      <input
+        class="search-input"
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onSearch()"
+        placeholder="Rechercher par titre..."
+      />
+
+      <button
+        class="button button-primary"
+        (click)="onSearch()">
+        Rechercher
+      </button>
+    </div>
+
+    <div class="toolbar-actions">
+      <a class="button button-secondary" routerLink="/my-loans">Mes emprunts</a>
+
+      @if (authService.isAdmin()) {
+      <a class="button button-secondary" routerLink="/loans">Tous les emprunts</a>
+      }
+
+      @if (authService.isAdmin()) {
+      <a class="button button-accent" routerLink="/books/new">+ Ajouter un livre</a>
+      }
+
+    </div>
+
+
+  </section>
+
+  @if (loading()) {
+
+  <div class="state-message">
+    <p>Chargement des livres...</p>
+  </div>
+
+  } @else if (books().length === 0) {
+
+  <div class="state-message">
+    <p>Aucun livre trouvé.</p>
+  </div>
+
+  } @else {
+
+  <section class="book-list">
+
+    @for (book of books(); track book.id) {
+
+    <article class="book-card">
+
+      <div class="book-card-content">
+
+        <div class="book-icon">
+          📖
+        </div>
+
+        <div class="book-info">
+
+          <a
+            class="book-title"
+            [routerLink]="['/books', book.id]">
+            {{ book.title }}
+          </a>
+
+          <p class="book-author">
+            {{ book.author.name }}
+          </p>
+
+          <p class="book-year">
+            {{ book.publicationYear }}
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="book-actions">
+
+        <a
+          class="button button-small button-secondary"
+          [routerLink]="['/books', book.id]">
+          Détails
+        </a>
+
+        @if (authService.isAdmin()) {
+
+        <a
+          class="button button-small button-secondary"
+          [routerLink]="['/books', book.id, 'edit']">
+          Modifier
+        </a>
+
+        <button
+          class="button button-small button-danger"
+          (click)="deleteBook(book.id)">
+          Supprimer
+        </button>
+
+        }
+
+      </div>
+
+    </article>
+
+    }
+
+  </section>
+
+  <nav class="pagination" aria-label="Pagination">
+
+    <button
+      class="button button-secondary"
+      (click)="previousPage()"
+      [disabled]="page() === 0">
+      ← Précédent
+    </button>
+
+    <span class="page-indicator">
+        Page {{ page() + 1 }} / {{ totalPages() }}
+      </span>
+
+    <button
+      class="button button-secondary"
+      (click)="nextPage()"
+      [disabled]="page() + 1 >= totalPages()">
+      Suivant →
+    </button>
+
+  </nav>
+
+  }
+
+  @if (errorMessage()) {
+  <div class="banner error">
+    {{ errorMessage() }}
+  </div>
+  }
+
+</main>

@@ -27,10 +27,10 @@ public class LoanService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Loan borrowBook(Long bookId, String username) {
-        long activeLoans = loanRepository.countByUserUsernameAndStatus(username, LoanStatus.BORROWED);
+    public Loan borrowBook(Long bookId, String email) {
+        long activeLoans = loanRepository.countByUserEmailAndStatus(email, LoanStatus.BORROWED);
         if (activeLoans >= MAX_ACTIVE_LOANS) {
-            throw new MaxLoansExceededException(username);
+            throw new MaxLoansExceededException(email);
         }
 
         Book book = bookRepository.findById(bookId)
@@ -40,8 +40,8 @@ public class LoanService {
             throw new BookNotAvailableException(bookId);
         }
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found"));
 
         book.setAvailable(false);
         bookRepository.save(book);
@@ -57,11 +57,11 @@ public class LoanService {
     }
 
     @Transactional
-    public Loan returnBook(Long loanId, String username) {
+    public Loan returnBook(Long loanId, String email) {
         Loan loan = loanRepository.findById(loanId)
                 .orElseThrow(() -> new LoanNotFoundException(loanId));
 
-        if (!loan.getUser().getUsername().equals(username)) {
+        if (!loan.getUser().getEmail().equals(email)) {
             throw new ForbiddenLoanAccessException();
         }
 
@@ -75,8 +75,8 @@ public class LoanService {
         return loanRepository.save(loan);
     }
 
-    public List<Loan> getMyLoans(String username) {
-        return loanRepository.findByUserUsername(username);
+    public List<Loan> getMyLoans(String email) {
+        return loanRepository.findByUserEmail(email);
     }
 
     public List<Loan> getAllLoans() {

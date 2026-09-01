@@ -1,0 +1,75 @@
+<main class="loans-container">
+
+  <a class="back-link" routerLink="/books">
+    ← Retour aux livres
+  </a>
+
+  <h1>Tous les emprunts</h1>
+
+  @if (loading()) {
+
+  <p>Chargement...</p>
+
+  } @else if (loans().length === 0) {
+
+  <div class="empty-state">
+
+    <div class="empty-icon">
+      📚
+    </div>
+
+    <h2>Aucun emprunt</h2>
+
+    <p>
+      Vous n'avez actuellement aucun livre emprunté.
+    </p>
+
+  </div>
+
+  } @else {
+
+  <div class="loan-list">
+
+    @for (loan of loans(); track loan.id) {
+
+    <article class="loan-card">
+
+      <h2>{{ loan.book.title }}</h2>
+
+      <p>
+        Emprunté le {{ loan.loanDate | date:'dd/MM/yyyy' }}
+      </p>
+
+      <p>
+        Retour prévu le {{ loan.dueDate | date:'dd/MM/yyyy' }}
+      </p>
+
+      @if (loan.status === 'BORROWED') {
+
+      <span class="status status-borrowed">
+              En cours
+            </span>
+
+      } @else {
+
+      <span class="status status-available">
+              Rendu le {{ loan.returnedDate | date:'dd/MM/yyyy' }}
+            </span>
+
+      }
+
+    </article>
+
+    }
+
+  </div>
+
+  }
+
+  @if (errorMessage()) {
+  <div class="banner error">
+    {{ errorMessage() }}
+  </div>
+  }
+
+</main>

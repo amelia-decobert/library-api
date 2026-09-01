@@ -52,7 +52,7 @@ public class LoanController {
         return ResponseEntity.status(HttpStatus.CREATED).body(loanMapper.toResponse(loan));
     }
 
-    @PutMapping("/books/{id}/return")
+    @PutMapping("/loans/{id}/return")
     public LoanResponse returnBook(@PathVariable Long id, Authentication authentication) {
         Loan loan = loanService.returnBook(id, authentication.getName());
 

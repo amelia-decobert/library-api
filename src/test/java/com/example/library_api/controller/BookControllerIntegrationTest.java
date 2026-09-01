@@ -1,14 +1,20 @@
 package com.example.library_api.controller;
 
+import com.example.library_api.model.Author;
+import com.example.library_api.repository.AuthorRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,14 +25,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // Use SpringBootTest with a mock web environment and MockMvc to test HTTP endpoints
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@TestPropertySource(properties = {
-        "spring.datasource.url=jdbc:h2:mem:testdb;MODE=PostgreSQL",
-        "spring.datasource.driver-class-name=org.h2.Driver",
-        "spring.jpa.hibernate.ddl-auto=create-drop"
-})
+@Testcontainers
+
 class BookControllerIntegrationTest {
+    @Container
+    @ServiceConnection
+
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine");
+
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private AuthorRepository authorRepository;
+
+    private Long existingAuthorId;
+
+    @BeforeEach
+    void setUp() {
+        Author author = new Author();
+        author.setName("Robert C. Martin");
+        existingAuthorId = authorRepository.save(author).getId();
+    }
 
     @Test
     @WithMockUser(username = "jim", roles = "USER")
@@ -48,10 +68,10 @@ class BookControllerIntegrationTest {
             {"title": "Domain-Driven Design",
             "isbn": "9780321125217",
             "publicationYear": 2003,
-            "authorId": 1,
+            "authorId": %d,
             "categoryIds": []
         }
-        """;
+        """.formatted(existingAuthorId);
 
         // ACT & ASSERT (perform POST request and verify response status and body)
         mockMvc.perform(post("/books")

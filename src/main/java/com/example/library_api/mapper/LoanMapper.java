@@ -16,7 +16,7 @@ public class LoanMapper {
         return new LoanResponse(
                 loan.getId(),
                 bookMapper.toResponse(loan.getBook()),
-                loan.getUser().getUsername(),
+                loan.getUser().getEmail(),
                 loan.getLoanDate(),
                 loan.getDueDate(),
                 loan.getReturnedDate(),
