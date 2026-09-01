@@ -78,7 +78,7 @@ class BookRepositoryTest {
 
         // ASSERT
         assertTrue(found.isPresent());
-        assertEquals("wrong title", found.get().getTitle());
+        assertEquals("1984", found.get().getTitle());
     }
 
     @Test
