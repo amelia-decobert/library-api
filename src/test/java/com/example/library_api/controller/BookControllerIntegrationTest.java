@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -27,11 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @Testcontainers
-//@TestPropertySource(properties = {
-//        "spring.datasource.url=jdbc:h2:mem:testdb;MODE=PostgreSQL",
-//        "spring.datasource.driver-class-name=org.h2.Driver",
-//        "spring.jpa.hibernate.ddl-auto=create-drop"
-//})
 
 class BookControllerIntegrationTest {
     @Container
